@@ -3,6 +3,7 @@ from kivy.clock import Clock
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 from kivy.vector import Vector
 from kivy.properties import (
     NumericProperty,
@@ -20,22 +21,34 @@ class BaseSlider(Image):
     velocity_x = NumericProperty(0)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
+    lane = ObjectProperty()
 
-
-class BeerPuck(BaseSlider):
-
-    def __init__(self, pos=None):
-        super(BeerPuck, self).__init__()
+    def __init__(self, pos=None, lane=None):
+        super(BaseSlider, self).__init__()
         self.size_hint = None, None
         if pos:
             self.pos = pos
+        if lane:
+            self.lane = lane
         self.start()
+
+    def start(self):
+        self.velocity = self.velocity
+
+
+class BeerPuck(BaseSlider):
+    velocity_x = NumericProperty(-5)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
 
     def move(self):
         window_cords = self.to_window(*self.pos)
 
         if window_cords[0] <= 0:
-            # Negative a life! served a drink that crashed. no recip.
+            self.lane.level.beers.remove(self)
+            self.lane.level.lives -= 1
+            self.lane.puck_area.remove_widget(self)
+
             pass
         else:
             # print 'pos:', self.pos
@@ -43,20 +56,16 @@ class BeerPuck(BaseSlider):
             # print 'size:', self.size
             self.pos = Vector(*self.velocity) + self.pos
 
-    def start(self, vel=(-5, 0)):
-        self.velocity = vel
-
 
 class Puck(BaseSlider):
-    pass
+    velocity_x = NumericProperty(6)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
 
 
 class GameState(object):
-    pass
-
-
-class BaseSlider(Image):
-    pass
+    lives = NumericProperty(3)
+    score = NumericProperty(0)
 
 
 class Lane(GridLayout):
@@ -68,7 +77,8 @@ class Level(Screen):
     lane_two = ObjectProperty()
     lane_three = ObjectProperty()
     lane_four = ObjectProperty()
-
+    score = NumericProperty(0)
+    lives = NumericProperty(3)
     beers = ListProperty(())
 
     def on_pre_enter(self):
@@ -78,9 +88,16 @@ class Level(Screen):
     def update(self, dt):
         for beer in self.beers:
             beer.move()
+        if self.lives <= 0:
+            self.game_over()
 
     def start(self):
         Clock.schedule_interval(self.update, 1.0 / 60.0)
+
+    def game_over(self):
+        Clock.unschedule(self.update)
+        label = Label(text='You Lost.')
+        self.lane_one.add_widget(label)
 
     def setup(self):
         pass
@@ -88,7 +105,7 @@ class Level(Screen):
     def serve_handler(self, button):
         button_pos = list(button.to_window(*button.pos))
         button_pos[0] -= 100
-        beer = BeerPuck()
+        beer = BeerPuck(lane=button.lane)
         button.lane.puck_area.add_widget(beer)
         beer.pos = beer.to_local(button_pos[0], 15)
         self.beers.append(beer)
@@ -97,7 +114,9 @@ class Level(Screen):
 class Tppr(App):
 
     def build(self):
+        state = GameState()
         sm = ScreenManager()
+        sm.state = state
         sm.add_widget(MainMenu())
         sm.add_widget(Level(name='Level 1'))
         return sm
