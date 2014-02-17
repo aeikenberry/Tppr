@@ -121,6 +121,7 @@ class Level(Screen):
                         self.pucks.remove(puck)
                     except ValueError:
                         pass
+                    self.score += 1
 
     def start(self):
         Clock.schedule_interval(self.update, 1.0 / 60.0)
