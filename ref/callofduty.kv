@@ -1,0 +1,118 @@
+#:kivy 1.0.9
+
+#:import random random.random
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import SwapTransition kivy.uix.screenmanager.SwapTransition
+#:import WipeTransition kivy.uix.screenmanager.WipeTransition
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<Widget>:
+    canvas.after:
+        Line:
+            rectangle: self.x+1,self.y+1,self.width-1,self.height-1
+            dash_offset: 5
+            dash_length: 3
+
+<MainMenu>:
+    hue: random()
+    canvas:
+        Color:
+            hsv: self.hue, .5, .3
+        Rectangle:
+            size: self.size
+    Label:
+        font_size: 50
+        text: 'Call of Dookie!'
+    BoxLayout:
+        size_hint: .5, None
+        height: 250
+        pos_hint: {'center_x': .5}
+        orientation: 'vertical'
+        Button:
+            text: 'Start New Game'
+            size_hint: None, None
+            size: 150, 50
+            on_release: root.manager.current = root.manager.next()
+        Button:
+            text: 'Continue'
+            size_hint: None, None
+            size: 150, 50
+
+
+<Patron>:
+    source: 'photo.jpg'
+
+<Player>:
+    size: 10, 10
+    canvas:
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+<PatronArea>:
+    canvas.before:
+        Color:
+            hsv: 0, 1, 0
+            a: .4
+        Rectangle:
+            pos: self.parent.pos
+            size: self.size
+
+<Level>:
+    id: _level
+    toolbar: _toolbar
+    hue: random()
+    player: _player
+    patron_area: _patron_area
+    server_area: _server_area
+    canvas:
+        Color:
+            hsv: 2, .5, .3
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    AnchorLayout:
+        anchor_y: 'top'
+        anchor_x: 'center'
+        Toolbar:
+            id: _toolbar
+            level: _level
+            dropdown_bar: _dropdown_bar
+            rows: 1
+            cols: 3
+            size_hint: 1, .075
+            Label:
+                font_size: 18
+                text: 'Patrons Left: ' + str(root.patron_count)
+                size_hint: .33, .075
+            Label:
+                font_size: 18
+                text: 'Lives: ' + str(root.lives)
+                size_hint: .33, .075
+            DropdownBar:
+                rows: 1
+                height: 20
+                id: _dropdown_bar
+    AnchorLayout:
+        anchor_y: 'bottom'
+        anchor_x: 'right'
+        PatronArea:
+            level: _level
+            server_area: _server_area
+            id: _patron_area
+            size_hint: .80, .925
+    AnchorLayout:
+        anchor_y: 'bottom'
+        anchor_x: 'left'
+        FloatLayout:
+            level: _level
+            patron_area: _patron_area
+            id: _server_area
+            size_hint: .20, .925
+            Player:
+                id: _player
+                patron_area: _patron_area
+                center: self.parent.center
+                size_hint: None, None
+                width: 20
+                height: 20

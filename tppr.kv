@@ -1,0 +1,170 @@
+#:kivy 1.8.0
+
+# <Widget>:
+#     canvas.after:
+#         Line:
+#             rectangle: self.x+1,self.y+1,self.width-1,self.height-1
+#             dash_offset: 5
+#             dash_length: 3
+
+<BeerPuck>:
+    source: 'photo.jpg'
+
+<MainMenu>:
+    canvas:
+        Color:
+            hsv: 6, .5, .3
+        Rectangle:
+            size: self.size
+    Label:
+        font_size: 50
+        text: 'Tppr'
+    BoxLayout:
+        size_hint: .5, None
+        height: 250
+        pos_hint: {'center_x': .5}
+        orientation: 'vertical'
+        Button:
+            text: 'Start New Game'
+            size_hint: None, None
+            size: 150, 50
+            on_release: root.manager.current = 'Level 1'
+        Button:
+            text: 'Continue'
+            size_hint: None, None
+            size: 150, 50
+
+<Level>:
+
+    id: _level
+    status_bar: _status_bar
+    bar_grid: _bar_grid
+
+    lane_one: _lane_one
+    lane_two: _lane_two
+    lane_three: _lane_three
+    lane_four: _lane_four
+
+    canvas:
+        Color:
+            hsv: 3, .5, .3
+        Rectangle:
+            size: self.size
+    AnchorLayout:
+        anchor_y: 'top'
+        anchor_x: 'center'
+        GridLayout:
+            id: _status_bar
+            rows: 1
+            cols: 3
+            size_hint: 1, .075
+            Label:
+                text: 'Tappr'
+            Label:
+                text: 'Lives'
+            Label:
+                text: 'Score'
+    AnchorLayout:
+        anchor_y: 'bottom'
+        anchor_x: 'center'
+        GridLayout:
+            id: _bar_grid
+            rows: 4
+            cols: 1
+            size_hint: 1, .925
+            Lane:
+                id: _lane_one
+                serve_button: _button
+                puck_area: _puck_area_one
+                rows: 1
+                cols: 2
+                AnchorLayout:
+                    anchor_y: 'top'
+                    anchor_x: 'left'
+                    size_hint_x: 2
+                    RelativeLayout:
+                        id: _puck_area_one
+                        Label:
+                            text: 'lane 1'
+                AnchorLayout:
+                    anchor_y: 'center'
+                    anchor_x: 'right'
+                    size_hint_x: .25
+                    Button:
+                        id: _button
+                        lane: _lane_one
+                        text: 'Serve'
+                        size_hint_y: .5
+                        on_release: root.serve_handler(self)
+            Lane:
+                id: _lane_two
+                serve_button: _button
+                puck_area: _puck_area_two
+                rows: 1
+                cols: 2
+                AnchorLayout:
+                    anchor_y: 'top'
+                    anchor_x: 'left'
+                    size_hint_x: 2
+                    RelativeLayout:
+                        id: _puck_area_two
+                        Label:
+                            text: 'lane 2'
+                AnchorLayout:
+                    anchor_y: 'center'
+                    anchor_x: 'right'
+                    size_hint_x: .25
+                    Button:
+                        id: _button
+                        lane: _lane_two
+                        text: 'Serve'
+                        size_hint_y: .5
+                        on_release: root.serve_handler(self)
+            Lane:
+                id: _lane_three
+                serve_button: _button
+                puck_area: _puck_area_three
+                rows: 1
+                cols: 2
+                AnchorLayout:
+                    anchor_y: 'top'
+                    anchor_x: 'left'
+                    size_hint_x: 2
+                    RelativeLayout:
+                        id: _puck_area_three
+                        Label:
+                            text: 'lane 3'
+                AnchorLayout:
+                    anchor_y: 'center'
+                    anchor_x: 'right'
+                    size_hint_x: .25
+                    Button:
+                        id: _button
+                        lane: _lane_three
+                        text: 'Serve'
+                        size_hint_y: .5
+                        on_release: root.serve_handler(self)
+            Lane:
+                id: _lane_four
+                puck_area: _puck_area_four
+                serve_button: _button
+                rows: 1
+                cols: 2
+                AnchorLayout:
+                    anchor_y: 'top'
+                    anchor_x: 'left'
+                    size_hint_x: 2
+                    RelativeLayout:
+                        id: _puck_area_four
+                        Label:
+                            text: 'lane 4'
+                AnchorLayout:
+                    anchor_y: 'center'
+                    anchor_x: 'right'
+                    size_hint_x: .25
+                    Button:
+                        id: _button
+                        lane: _lane_four
+                        text: 'Serve'
+                        size_hint_y: .5
+                        on_release: root.serve_handler(self)
