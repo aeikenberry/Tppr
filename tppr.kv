@@ -67,8 +67,9 @@
     AnchorLayout:
         anchor_y: 'bottom'
         anchor_x: 'center'
-        GridLayout:
+        BoxLayout:
             id: _bar_grid
+            orientation: 'vertical'
             rows: 4
             cols: 1
             size_hint: 1, .925
@@ -84,8 +85,6 @@
                     size_hint_x: 2
                     RelativeLayout:
                         id: _puck_area_one
-                        Label:
-                            text: 'lane 1'
                 AnchorLayout:
                     anchor_y: 'center'
                     anchor_x: 'right'
@@ -108,8 +107,6 @@
                     size_hint_x: 2
                     RelativeLayout:
                         id: _puck_area_two
-                        Label:
-                            text: 'lane 2'
                 AnchorLayout:
                     anchor_y: 'center'
                     anchor_x: 'right'
@@ -132,8 +129,6 @@
                     size_hint_x: 2
                     RelativeLayout:
                         id: _puck_area_three
-                        Label:
-                            text: 'lane 3'
                 AnchorLayout:
                     anchor_y: 'center'
                     anchor_x: 'right'
@@ -156,8 +151,6 @@
                     size_hint_x: 2
                     RelativeLayout:
                         id: _puck_area_four
-                        Label:
-                            text: 'lane 4'
                 AnchorLayout:
                     anchor_y: 'center'
                     anchor_x: 'right'

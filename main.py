@@ -26,14 +26,21 @@ class BeerPuck(BaseSlider):
 
     def __init__(self, pos=None):
         super(BeerPuck, self).__init__()
+        self.size_hint = None, None
         if pos:
             self.pos = pos
         self.start()
 
     def move(self):
-        if self.pos[0] == -500:
-            print 'at zero'
+        window_cords = self.to_window(*self.pos)
+
+        if window_cords[0] <= 0:
+            # Negative a life! served a drink that crashed. no recip.
+            pass
         else:
+            # print 'pos:', self.pos
+            # print 'window_pos:', window_cords
+            # print 'size:', self.size
             self.pos = Vector(*self.velocity) + self.pos
 
     def start(self, vel=(-5, 0)):
@@ -79,9 +86,11 @@ class Level(Screen):
         pass
 
     def serve_handler(self, button):
-        offset = (300, 0)
-        beer = BeerPuck(pos=offset)
+        button_pos = list(button.to_window(*button.pos))
+        button_pos[0] -= 100
+        beer = BeerPuck()
         button.lane.puck_area.add_widget(beer)
+        beer.pos = beer.to_local(button_pos[0], 15)
         self.beers.append(beer)
 
 
