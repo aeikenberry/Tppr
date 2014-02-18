@@ -49,11 +49,7 @@ class BeerPuck(BaseSlider):
             self.lane.level.beers.remove(self)
             self.lane.level.lives -= 1
             self.lane.puck_area.remove_widget(self)
-            print self.lane.puck_area.children
         else:
-            # print 'pos:', self.pos
-            # print 'window_pos:', window_cords
-            # print 'size:', self.size
             self.pos = Vector(*self.velocity) + self.pos
 
 
@@ -63,7 +59,12 @@ class Puck(BaseSlider):
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
     def move(self):
-        self.pos = Vector(*self.velocity) + self.pos
+        if self.pos[0] >= self.lane.puck_area.right - 150:
+            self.lane.puck_area.remove_widget(self)
+            self.lane.level.pucks.remove(self)
+            self.lane.level.lives -= 1
+        else:
+            self.pos = Vector(*self.velocity) + self.pos
 
 
 class Lane(GridLayout):
@@ -103,7 +104,7 @@ class Level(Screen):
         for puck in self.pucks:
             puck.move()
 
-        if self.counter % 9 == 1:
+        if self.counter % 130 == 1:
             lane = self.lanes[choice([1, 2, 3, 4])]
             puck = Puck(lane=lane)
             lane.puck_area.add_widget(puck)
