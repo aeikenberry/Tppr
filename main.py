@@ -1,12 +1,14 @@
 from random import choice
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.vector import Vector
 from kivy.properties import (
+    BooleanProperty,
     NumericProperty,
     ObjectProperty,
     ReferenceListProperty,
@@ -52,19 +54,62 @@ class BeerPuck(BaseSlider):
         else:
             self.pos = Vector(*self.velocity) + self.pos
 
+    def collide_handler(self):
+        self.lane.puck_area.remove_widget(self)
+        try:
+            self.lane.level.beers.remove(self)
+        except ValueError:
+            pass
+
+
+class Beer(Button):
+    pass
+
 
 class Puck(BaseSlider):
-    velocity_x = NumericProperty(6)
+    velocity_x = NumericProperty(2.5)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
+    smack_back = NumericProperty(40)
+    smack_timer = NumericProperty(0)
+    is_served = BooleanProperty(False)
+    smack_velocity_x = NumericProperty(-6)
+    forward_velocity_x = NumericProperty(2.5)
 
     def move(self):
+        window_cords = self.to_window(*self.pos)
+
         if self.pos[0] >= self.lane.puck_area.right - 150:
-            self.lane.puck_area.remove_widget(self)
-            self.lane.level.pucks.remove(self)
+            self.destroy()
             self.lane.level.lives -= 1
+        elif window_cords[0] <= -5:
+            self.destroy()
+            self.lane.level.score += 10
+        elif self.is_served:
+            if self.smack_timer <= self.smack_back:
+                self.move_along()
+            else:
+                self.is_served = False
+                self.smack_timer = 0
+                self.velocity_x = self.forward_velocity_x
+            self.smack_timer += 1
         else:
-            self.pos = Vector(*self.velocity) + self.pos
+            'moving along'
+            self.move_along()
+
+    def destroy(self):
+        self.lane.level.pucks.remove(self)
+        self.lane.puck_area.remove_widget(self)
+
+    def collide_handler(self):
+        if not self.is_served:
+            self.is_served = True
+            self.velocity_x = self.smack_velocity_x
+        # Need a way to make it move back relative to the smack_back
+        # And pause/deactivate according to the smack_time
+
+    def move_along(self):
+        self.pos = Vector(*self.velocity) + self.pos
 
 
 class Lane(GridLayout):
@@ -115,13 +160,9 @@ class Level(Screen):
             pucks_in_lane = [p for p in self.pucks if p.lane == beer.lane]
             for puck in pucks_in_lane:
                 if beer.collide_widget(puck):
-                    beer.lane.puck_area.remove_widget(beer)
-                    puck.lane.puck_area.remove_widget(puck)
-                    try:
-                        self.beers.remove(beer)
-                        self.pucks.remove(puck)
-                    except ValueError:
-                        pass
+                    if not puck.is_served:
+                        beer.collide_handler()
+                    puck.collide_handler()
                     self.score += 1
 
     def start(self):
