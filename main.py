@@ -1,3 +1,4 @@
+import time
 from random import choice
 from kivy.app import App
 from kivy.clock import Clock
@@ -135,6 +136,7 @@ class Level(Screen):
             3: self.lane_three,
             4: self.lane_four,
         }
+        self.you_lose_label = Label(text='You Lost.')
 
     def on_pre_enter(self):
         self.setup()
@@ -152,6 +154,7 @@ class Level(Screen):
         if self.counter % 130 == 1:
             lane = self.lanes[choice([1, 2, 3, 4])]
             puck = Puck(lane=lane)
+            puck.pos = puck.pos[0], puck.pos[1] + 15
             lane.puck_area.add_widget(puck)
             self.pucks.append(puck)
         self.counter += 1
@@ -170,8 +173,17 @@ class Level(Screen):
 
     def game_over(self):
         Clock.unschedule(self.update)
-        label = Label(text='You Lost.')
-        self.lane_one.add_widget(label)
+        self.lane_one.add_widget(self.you_lose_label)
+        time.sleep(4)
+        self.reset()
+        self.manager.current = self.manager.previous()
+
+    def reset(self):
+        for num, lane in self.lanes.items():
+            lane.puck_area.clear_widgets()
+        self.score = 0
+        self.lives = 3
+        self.lane_one.remove_widget(self.you_lose_label)
 
     def setup(self):
         pass
