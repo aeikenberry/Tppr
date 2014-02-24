@@ -179,6 +179,8 @@ class Level(Screen):
         self.manager.current = self.manager.previous()
 
     def reset(self):
+        self.beers = list()
+        self.pucks = list()
         for num, lane in self.lanes.items():
             lane.puck_area.clear_widgets()
         self.score = 0
