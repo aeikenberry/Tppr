@@ -49,9 +49,8 @@ class BeerPuck(BaseSlider):
         window_cords = self.to_window(*self.pos)
 
         if window_cords[0] <= 0:
-            self.lane.level.beers.remove(self)
+            self.destroy()
             self.lane.level.lives -= 1
-            self.lane.puck_area.remove_widget(self)
         else:
             self.pos = Vector(*self.velocity) + self.pos
 
@@ -61,6 +60,10 @@ class BeerPuck(BaseSlider):
             self.lane.level.beers.remove(self)
         except ValueError:
             pass
+
+    def destroy(self):
+        self.lane.level.beers.remove(self)
+        self.lane.puck_area.remove_widget(self)
 
 
 class Beer(Button):
@@ -126,6 +129,7 @@ class Level(Screen):
     lives = NumericProperty(3)
     beers = ListProperty(())
     pucks = ListProperty(())
+    movers = ReferenceListProperty(beers, pucks)
     counter = NumericProperty(0)
 
     def __init__(self, *args, **kwargs):
@@ -143,13 +147,13 @@ class Level(Screen):
         self.start()
 
     def update(self, dt):
-        for beer in self.beers:
-            beer.move()
         if self.lives <= 0:
             self.game_over()
             return
-        for puck in self.pucks:
-            puck.move()
+
+        for group in self.movers:
+            for obj in group:
+                obj.move()
 
         if self.counter % 130 == 1:
             lane = self.lanes[choice([1, 2, 3, 4])]
