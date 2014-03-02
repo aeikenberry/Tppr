@@ -40,6 +40,22 @@ class BaseSlider(Image):
         self.velocity = self.velocity
 
 
+class EmptyBeer(BaseSlider):
+    velocity_x = NumericProperty(2.5)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
+
+    def move(self):
+        window_cords = self.to_window(*self.pos)  # TODO: Move this into the base class
+        if self.pos[0] >= self.lane.puck_area.right - 150:
+            self.destroy()
+            self.lane.level.lives -= 1
+
+    def destroy(self):
+        self.lane.level.empty_beers.remove(self)
+        self.lane.puck_area.remove_widget(self)
+
+
 class BeerPuck(BaseSlider):
     velocity_x = NumericProperty(-5)
     velocity_y = NumericProperty(0)
@@ -71,7 +87,7 @@ class Beer(Button):
 
 
 class Puck(BaseSlider):
-    velocity_x = NumericProperty(2.5)
+    velocity_x = NumericProperty(1.5)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
     smack_back = NumericProperty(40)
