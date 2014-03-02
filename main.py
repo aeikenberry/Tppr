@@ -1,3 +1,4 @@
+import time
 from random import choice
 from kivy.app import App
 from kivy.clock import Clock
@@ -172,6 +173,15 @@ class Level(Screen):
         Clock.unschedule(self.update)
         label = Label(text='You Lost.')
         self.lane_one.add_widget(label)
+        time.sleep(5)
+        self.tear_down()
+        self.manager.current = self.manager.previous()
+
+    def tear_down(self):
+        for num, lane in self.lanes.items():
+            lane.clear_widgets()
+        self.beers = list()
+        self.pucks = list()
 
     def setup(self):
         pass
