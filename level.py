@@ -21,9 +21,11 @@ class Level(Screen):
     score = NumericProperty(0)
     lives = NumericProperty(3)
     beers = ListProperty(())
+    empty_beers = ListProperty(())
     pucks = ListProperty(())
-    movers = ReferenceListProperty(beers, pucks)
+    movers = ReferenceListProperty(beers, pucks, empty_beers)
     counter = NumericProperty(0)
+    puck_addition_rate = NumericProperty(113)
 
     def __init__(self, *args, **kwargs):
         super(Level, self).__init__(*args, **kwargs)
@@ -48,12 +50,8 @@ class Level(Screen):
             for obj in group:
                 obj.move()
 
-        if self.counter % 130 == 1:
-            lane = self.lanes[choice([1, 2, 3, 4])]
-            puck = Puck(lane=lane)
-            puck.pos = puck.pos[0], puck.pos[1] + 15
-            lane.puck_area.add_widget(puck)
-            self.pucks.append(puck)
+        if self.counter % self.puck_addition_rate == 1:
+            self.add_puck()
         self.counter += 1
 
         for beer in self.beers:
@@ -68,9 +66,16 @@ class Level(Screen):
     def start(self):
         Clock.schedule_interval(self.update, 1.0 / 60.0)
 
+    def add_puck(self):
+        lane = self.lanes[choice([1, 2, 3, 4])]
+        puck = Puck(lane=lane)
+        puck.pos = puck.pos[0], puck.pos[1] + 15
+        lane.puck_area.add_widget(puck)
+        self.pucks.append(puck)
+
     def game_over(self):
+        self.add_widget(self.you_lose_label)
         Clock.unschedule(self.update)
-        self.lane_one.add_widget(self.you_lose_label)
         time.sleep(4)
         self.manager.current = self.manager.previous()
         self.reset()
@@ -80,6 +85,7 @@ class Level(Screen):
         self.pucks = list()
         for num, lane in self.lanes.items():
             lane.puck_area.clear_widgets()
+        self.remove_widget(self.you_lose_label)
         self.score = 0
         self.lives = 3
         self.lane_one.remove_widget(self.you_lose_label)
