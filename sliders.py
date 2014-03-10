@@ -43,6 +43,10 @@ class EmptyBeer(BaseSlider):
         self.lane.level.empty_beers.remove(self)
         self.lane.puck_area.remove_widget(self)
 
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.destroy()
+
 
 class BeerPuck(BaseSlider):
     velocity_x = NumericProperty(-5)
@@ -71,14 +75,25 @@ class BeerPuck(BaseSlider):
 
 
 class Puck(BaseSlider):
+    # Current Velocity
     velocity_x = NumericProperty(0)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
-    smack_back = NumericProperty(40)
+
+    # Properties for when beer collision smack-back
+    smack_back_duration = NumericProperty(30)
     smack_timer = NumericProperty(0)
     is_served = BooleanProperty(False)
     smack_velocity_x = NumericProperty(-6)
+
+    # Normal State
     forward_velocity_x = NumericProperty(1.5)
+
+    # Patrons move forward and then pause
+    forward_delay_duration = NumericProperty(125)
+    forward_delay_interval = NumericProperty(50)
+    forward_delay_timer = NumericProperty(0)
+    is_delayed = BooleanProperty(False)
 
     def move(self):
         window_cords = self.to_window(*self.pos)
@@ -90,7 +105,7 @@ class Puck(BaseSlider):
             self.destroy()
             self.lane.level.score += 10
         elif self.is_served:
-            if self.smack_timer <= self.smack_back:
+            if self.smack_timer <= self.smack_back_duration:
                 self.move_along()
             else:
                 self.reset_forward_motion()
@@ -101,6 +116,7 @@ class Puck(BaseSlider):
     def reset_forward_motion(self):
         self.is_served = False
         self.smack_timer = 0
+        self.forward_delay_timer = 0
         self.start()
         self.send_beer_back()
 
@@ -123,9 +139,16 @@ class Puck(BaseSlider):
         if not self.is_served:
             self.is_served = True
             self.velocity_x = self.smack_velocity_x
-        # TODO:
-        # Need a way to make it move back relative to the smack_back
-        # And pause/deactivate according to the smack_time
+            self.forward_delay_timer = 0
 
     def move_along(self):
-        self.pos = Vector(*self.velocity) + self.pos
+        if self.forward_delay_timer <= self.forward_delay_interval:
+            self.pos = Vector(*self.velocity) + self.pos
+        elif self.forward_delay_timer <= self.forward_delay_duration:
+            pass
+        else:
+            self.forward_delay_timer = 0
+        self.forward_delay_timer += 1
+
+    def halt_movement(self):
+        self.velocity_x = 0
