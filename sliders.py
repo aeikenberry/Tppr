@@ -118,7 +118,7 @@ class Puck(BaseSlider):
         self.smack_timer = 0
         self.forward_delay_timer = 0
         self.start()
-        self.send_beer_back()
+        self.send_back()
 
     def start(self):
         self.velocity_x = self.forward_velocity_x
@@ -127,7 +127,7 @@ class Puck(BaseSlider):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
 
-    def send_beer_back(self):
+    def send_back(self):
         pos = self.pos
         lane = self.lane
         empty = EmptyBeer(lane=lane)
