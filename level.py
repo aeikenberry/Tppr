@@ -3,6 +3,7 @@ from random import choice
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
+from kivy.uix.gridlayout import GridLayout
 from kivy.properties import (
     NumericProperty,
     ObjectProperty,
@@ -13,13 +14,15 @@ from kivy.properties import (
 from sliders import Puck, BeerPuck
 
 
+class Lane(GridLayout):
+    pass
+
+
 class Level(Screen):
     lane_one = ObjectProperty()
     lane_two = ObjectProperty()
     lane_three = ObjectProperty()
     lane_four = ObjectProperty()
-    score = NumericProperty(0)
-    lives = NumericProperty(3)
     beers = ListProperty(())
     empty_beers = ListProperty(())
     pucks = ListProperty(())
@@ -36,13 +39,16 @@ class Level(Screen):
             4: self.lane_four,
         }
         self.you_lose_label = Label(text='You Lost.')
+        self.you_win_label = Label(text='Level Complete!')
+        self.total_patrons = kwargs['patrons']
+        self.starting_patrons = kwargs['starting']
 
     def on_pre_enter(self):
         self.setup()
         self.start()
 
     def update(self, dt):
-        if self.lives <= 0:
+        if self.manager._app.lives <= 0:
             self.game_over()
             return
 
@@ -50,7 +56,7 @@ class Level(Screen):
             for obj in group:
                 obj.move()
 
-        if self.counter % self.puck_addition_rate == 1:
+        if self.counter % self.puck_addition_rate == 1 and self.total_patrons > 0:
             self.add_puck()
         self.counter += 1
 
@@ -61,10 +67,12 @@ class Level(Screen):
                     if not puck.is_served:
                         beer.collide_handler()
                     puck.collide_handler()
-                    self.score += 1
+                    self.manager._app.score += 1
 
     def start(self):
         Clock.schedule_interval(self.update, 1.0 / 60.0)
+        for i in range(self.starting_patrons - 1):
+            self.add_puck()
 
     def add_puck(self):
         lane = self.lanes[choice([1, 2, 3, 4])]
@@ -72,12 +80,21 @@ class Level(Screen):
         puck.pos = puck.pos[0], puck.pos[1] + 15
         lane.puck_area.add_widget(puck)
         self.pucks.append(puck)
+        self.total_patrons -= 1
 
     def game_over(self):
         self.add_widget(self.you_lose_label)
         Clock.unschedule(self.update)
         time.sleep(4)
-        self.manager.current = self.manager.previous()
+        self.manager.current = 'Main Menu'
+        self.reset()
+        self.manager._app.reset()
+
+    def you_won(self):
+        self.add_widget(self.you_win_label)
+        Clock.unschedule(self.update)
+        time.sleep(4)
+        self.manager.current = self.manager.next()
         self.reset()
 
     def reset(self):
@@ -86,8 +103,6 @@ class Level(Screen):
         for num, lane in self.lanes.items():
             lane.puck_area.clear_widgets()
         self.remove_widget(self.you_lose_label)
-        self.score = 0
-        self.lives = 3
         self.lane_one.remove_widget(self.you_lose_label)
 
     def setup(self):

@@ -25,23 +25,13 @@
     Label:
         font_size: 50
         text: 'Tppr'
-    BoxLayout:
-        size_hint: .5, None
-        height: 250
-        pos_hint: {'center_x': .5}
-        orientation: 'vertical'
-        Button:
-            text: 'Start New Game'
-            size_hint: None, None
-            size: 150, 50
-            on_release: root.manager.current = 'Level 1'
-        Button:
-            text: 'Continue'
-            size_hint: None, None
-            size: 150, 50
+    Button:
+        text: 'Start New Game'
+        size_hint: None, None
+        size: 150, 50
+        on_release: root.manager.current = 'Level 1'
 
 <Level>:
-
     id: _level
     status_bar: _status_bar
     bar_grid: _bar_grid
@@ -67,9 +57,9 @@
             Label:
                 text: 'Tappr'
             Label:
-                text: 'Lives ' + str(root.lives)
+                text: 'Score   ' + str(app.score)
             Label:
-                text: 'Score ' + str(root.score)
+                text: 'Lives  ' + str(app.lives)
     AnchorLayout:
         anchor_y: 'bottom'
         anchor_x: 'center'

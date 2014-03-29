@@ -35,7 +35,7 @@ class EmptyBeer(BaseSlider):
     def move(self):
         if self.pos[0] >= self.lane.puck_area.right - 150:
             self.destroy()
-            self.lane.level.lives -= 1
+            self.lane.level.manager._app.lives -= 1
         else:
             self.pos = Vector(*self.velocity) + self.pos
 
@@ -58,7 +58,7 @@ class BeerPuck(BaseSlider):
 
         if window_cords[0] <= 0:
             self.destroy()
-            self.lane.level.lives -= 1
+            self.lane.level.manager._app.lives -= 1
         else:
             self.pos = Vector(*self.velocity) + self.pos
 
@@ -100,10 +100,10 @@ class Puck(BaseSlider):
 
         if self.pos[0] >= self.lane.puck_area.right - 150:
             self.destroy()
-            self.lane.level.lives -= 1
+            self.lane.level.manager._app.lives -= 1
         elif window_cords[0] <= -5:
             self.destroy()
-            self.lane.level.score += 10
+            self.lane.level.manager._app.score += 10
         elif self.is_served:
             if self.smack_timer <= self.smack_back_duration:
                 self.move_along()
@@ -126,6 +126,8 @@ class Puck(BaseSlider):
     def destroy(self):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
+        if not self.lane.level.pucks:
+            self.lane.level.you_won()
 
     def send_back(self):
         pos = self.pos
