@@ -36,6 +36,7 @@ class EmptyBeer(BaseSlider):
     def move(self):
         if self.collide_widget(self.lane.serve_button):
             self.destroy()
+            print('losing life')
             self.lane.level.manager._app.lives -= 1
             return
 
@@ -101,8 +102,8 @@ class Puck(BaseSlider):
     forward_velocity_x = NumericProperty(3)
 
     # Patrons move forward and then pause
-    forward_delay_duration = NumericProperty(125)
-    forward_delay_interval = NumericProperty(70)
+    forward_delay_duration = NumericProperty(90)
+    forward_delay_interval = NumericProperty(50)
     forward_delay_timer = NumericProperty(0)
     is_delayed = BooleanProperty(False)
     state = StringProperty()
@@ -131,7 +132,7 @@ class Puck(BaseSlider):
                 self.reset_forward_motion()
             self.smack_timer += 1
         else:
-            self.continue_moving()
+            self.move_along()
 
     def reset_forward_motion(self):
         self.is_served = False

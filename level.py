@@ -103,6 +103,7 @@ class Level(Screen):
     def reset(self):
         self.beers = list()
         self.pucks = list()
+        self.empty_beers = list()
         for num, lane in self.lanes.items():
             lane.puck_area.clear_widgets()
         self.message_holder.remove_widget(self.you_lose_label)
