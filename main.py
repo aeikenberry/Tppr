@@ -4,7 +4,7 @@ from kivy.properties import NumericProperty
 from level import Level
 from levels import LEVELS
 
-V = '0.1.8'
+__version__ = '0.1.8'
 
 
 class MainMenu(Screen):
@@ -57,8 +57,6 @@ class Tppr(App):
 
     def build(self):
         return TpprMngr(transition=RiseInTransition(), app=self)
-
-__version__ = V
 
 if __name__ == '__main__':
     Tppr().run()

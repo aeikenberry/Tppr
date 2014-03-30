@@ -43,6 +43,7 @@
     id: _level
     status_bar: _status_bar
     bar_grid: _bar_grid
+    message_holder: _message_holder
 
     lane_one: _lane_one
     lane_two: _lane_two
@@ -54,6 +55,15 @@
             hsv: 255, 0, 0, 0.2
         Rectangle:
             size: self.size
+    FloatLayout:
+        AnchorLayout:
+            id: _message_holder
+            anchor_y: 'center'
+            anchor_x: 'center'
+            size_hint: .5, .5
+            Label:
+                text: ''
+
     AnchorLayout:
         anchor_y: 'top'
         anchor_x: 'center'
@@ -67,7 +77,7 @@
                 bold: True
             Label:
                 text: 'Score   ' + str(app.score)
-                color: 1,0,1,1 # <-----------
+                color: 1,0,1,1
             Label:
                 color: 1,1,0,1
                 text: 'Lives  ' + str(app.lives)
