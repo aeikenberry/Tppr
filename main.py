@@ -14,6 +14,23 @@ class TpprMngr(ScreenManager):
     def __init__(self, *args, **kwargs):
         super(ScreenManager, self).__init__(*args, **kwargs)
         self._app = kwargs['app']
+        self._load_screens()
+
+    def load_levels(self):
+        for i, level in enumerate(LEVELS, start=1):
+            if not 'name' in level:
+                level['name'] = "Level {}".format(i)
+            self.add_widget(Level(**level))
+
+    def _load_screens(self):
+        self.add_menu()
+        self.load_levels()
+
+    def add_menu(self):
+        self.add_widget(self.get_menu())
+
+    def get_menu(self):
+        return MainMenu(name='Main Menu')
 
 
 class Tppr(App):
@@ -25,15 +42,9 @@ class Tppr(App):
         self.lives = 3
 
     def build(self):
-        sm = TpprMngr(app=self)
-        sm.add_widget(MainMenu(name='Main Menu'))
-        for i, level in enumerate(LEVELS, start=1):
-            if not 'name' in level:
-                level['name'] = "Level {}".format(i)
-            sm.add_widget(Level(**level))
-        return sm
+        return TpprMngr(app=self)
 
 if __name__ == '__main__':
     Tppr().run()
 
-__version__ = '0.1.5'
+__version__ = '0.1.6'
