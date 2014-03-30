@@ -28,7 +28,6 @@ class Level(Screen):
     pucks = ListProperty(())
     movers = ReferenceListProperty(beers, pucks, empty_beers)
     counter = NumericProperty(0)
-    puck_addition_rate = NumericProperty(113)
 
     def __init__(self, *args, **kwargs):
         super(Level, self).__init__(*args, **kwargs)
@@ -38,11 +37,16 @@ class Level(Screen):
             3: self.lane_three,
             4: self.lane_four,
         }
+
         self.you_lose_label = Label(text='You Lost.')
         self.you_win_label = Label(text='Level Complete!')
         self.total_patrons = kwargs['patrons']
         self._total_patrons = kwargs['patrons']
         self.starting_patrons = kwargs['starting']
+
+        self.puck_speed = kwargs['puck_speed']
+        self.empty_speed = kwargs['empty_speed']
+        self.puck_addition_rate = kwargs['spawn_rate']
 
     def on_pre_enter(self):
         self.setup()
