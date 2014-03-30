@@ -41,6 +41,7 @@ class Level(Screen):
         self.you_lose_label = Label(text='You Lost.')
         self.you_win_label = Label(text='Level Complete!')
         self.total_patrons = kwargs['patrons']
+        self._total_patrons = kwargs['patrons']
         self.starting_patrons = kwargs['starting']
 
     def on_pre_enter(self):
@@ -103,7 +104,8 @@ class Level(Screen):
         for num, lane in self.lanes.items():
             lane.puck_area.clear_widgets()
         self.remove_widget(self.you_lose_label)
-        self.lane_one.remove_widget(self.you_lose_label)
+        self.remove_widget(self.you_win_label)
+        self.total_patrons = self._total_patrons
 
     def setup(self):
         pass

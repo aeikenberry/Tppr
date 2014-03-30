@@ -7,29 +7,37 @@
 #             dash_offset: 5
 #             dash_length: 3
 
+<Button>:
+    background_normal: 'img/square-yellow.png'
+    background_down: 'img/square-pressed.png'
+
 <BeerPuck>:
-    source: 'img/beer.jpg'
+    source: 'img/white.png'
 
 <Puck>:
-    source: 'img/joe.png'
+    source: 'img/green.png'
 
 <EmptyBeer>:
-    source: 'img/photo.jpg'
+    source: 'img/red.png'
 
 <MainMenu>:
     canvas:
         Color:
-            hsv: 6, .5, .3
+            hsv: 255, 0, 0, 0.2
         Rectangle:
             size: self.size
-    Label:
-        font_size: 50
-        text: 'Tppr'
-    Button:
-        text: 'Start New Game'
-        size_hint: None, None
-        size: 150, 50
-        on_release: root.manager.current = 'Level 1'
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+        GridLayout:
+            rows: 2
+            columns: 1
+            size_hint: .5, .5
+            Label:
+                font_size: 50
+                text: 'Tppr'
+            Button:
+                on_release: root.manager.current = 'Level 1'
 
 <Level>:
     id: _level
@@ -43,7 +51,7 @@
 
     canvas:
         Color:
-            hsv: 3, .5, .3
+            hsv: 255, 0, 0, 0.2
         Rectangle:
             size: self.size
     AnchorLayout:
@@ -56,9 +64,12 @@
             size_hint: 1, .075
             Label:
                 text: 'Tappr'
+                bold: True
             Label:
                 text: 'Score   ' + str(app.score)
+                color: 1,0,1,1 # <-----------
             Label:
+                color: 1,1,0,1
                 text: 'Lives  ' + str(app.lives)
     AnchorLayout:
         anchor_y: 'bottom'
@@ -89,7 +100,6 @@
                     Button:
                         id: _button
                         lane: _lane_one
-                        text: 'Serve'
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
@@ -112,7 +122,6 @@
                     Button:
                         id: _button
                         lane: _lane_two
-                        text: 'Serve'
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
@@ -135,7 +144,6 @@
                     Button:
                         id: _button
                         lane: _lane_three
-                        text: 'Serve'
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
@@ -158,6 +166,5 @@
                     Button:
                         id: _button
                         lane: _lane_four
-                        text: 'Serve'
                         size_hint_y: .5
                         on_release: root.serve_handler(self)

@@ -33,7 +33,7 @@ class EmptyBeer(BaseSlider):
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
     def move(self):
-        if self.pos[0] >= self.lane.puck_area.right - 150:
+        if self.collide_widget(self.lane.serve_button):
             self.destroy()
             self.lane.level.manager._app.lives -= 1
         else:
@@ -84,7 +84,7 @@ class Puck(BaseSlider):
     smack_back_duration = NumericProperty(30)
     smack_timer = NumericProperty(0)
     is_served = BooleanProperty(False)
-    smack_velocity_x = NumericProperty(-6)
+    smack_velocity_x = NumericProperty(-6.5)
 
     # Normal State
     forward_velocity_x = NumericProperty(1.5)
@@ -98,7 +98,7 @@ class Puck(BaseSlider):
     def move(self):
         window_cords = self.to_window(*self.pos)
 
-        if self.pos[0] >= self.lane.puck_area.right - 150:
+        if self.collide_widget(self.lane.serve_button):
             self.destroy()
             self.lane.level.manager._app.lives -= 1
         elif window_cords[0] <= -5:
