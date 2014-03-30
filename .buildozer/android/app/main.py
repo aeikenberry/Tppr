@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import NumericProperty
 from level import Level
+from levels import LEVELS
 
 
 class MainMenu(Screen):
@@ -26,12 +27,12 @@ class Tppr(App):
     def build(self):
         sm = TpprMngr(app=self)
         sm.add_widget(MainMenu(name='Main Menu'))
-        sm.add_widget(Level(name='Level 1', patrons=10, starting=1))
-        sm.add_widget(Level(name='Level 2', patrons=15, starting=2))
-        sm.add_widget(Level(name='Level 3', patrons=20, starting=4))
+        for i, level in enumerate(LEVELS, start=1):
+            level['name'] = "Level {}".format(i)
+            sm.add_widget(Level(**level))
         return sm
 
 if __name__ == '__main__':
     Tppr().run()
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
