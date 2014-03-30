@@ -5,6 +5,7 @@ from kivy.properties import (
     NumericProperty,
     ObjectProperty,
     ReferenceListProperty,
+    StringProperty,
 )
 
 
@@ -36,8 +37,9 @@ class EmptyBeer(BaseSlider):
         if self.collide_widget(self.lane.serve_button):
             self.destroy()
             self.lane.level.manager._app.lives -= 1
-        else:
-            self.pos = Vector(*self.velocity) + self.pos
+            return
+
+        self.pos = Vector(*self.velocity) + self.pos
 
     def destroy(self):
         self.lane.level.empty_beers.remove(self)
@@ -59,8 +61,17 @@ class BeerPuck(BaseSlider):
         if window_cords[0] <= 0:
             self.destroy()
             self.lane.level.manager._app.lives -= 1
-        else:
-            self.pos = Vector(*self.velocity) + self.pos
+            return
+        pucks_in_lane = [p for p in self.lane.level.pucks if p.lane == self.lane]
+        for puck in pucks_in_lane:
+            if puck.collide_widget(self):
+                if not puck.is_served:
+                    self.collide_handler()
+                puck.collide_handler()
+                self.lane.level.manager._app.score += 1
+                return
+
+        self.pos = Vector(*self.velocity) + self.pos
 
     def collide_handler(self):
         self.lane.puck_area.remove_widget(self)
@@ -94,15 +105,24 @@ class Puck(BaseSlider):
     forward_delay_interval = NumericProperty(70)
     forward_delay_timer = NumericProperty(0)
     is_delayed = BooleanProperty(False)
+    state = StringProperty()
+
+    class State(object):
+        """
+        Puck.State.FORWARD
+        """
+        FORWARD = 'forward'
+        BACKWARDS = 'backwards'
+        STOPPED = 'stopped'
 
     def move(self):
         window_cords = self.to_window(*self.pos)
 
         if self.collide_widget(self.lane.serve_button):
-            self.destroy()
+            self.collide()
             self.lane.level.manager._app.lives -= 1
         elif window_cords[0] <= -5:
-            self.destroy()
+            self.collide()
             self.lane.level.manager._app.score += 10
         elif self.is_served:
             if self.smack_timer <= self.smack_back_duration:
@@ -111,7 +131,7 @@ class Puck(BaseSlider):
                 self.reset_forward_motion()
             self.smack_timer += 1
         else:
-            self.move_along()
+            self.continue_moving()
 
     def reset_forward_motion(self):
         self.is_served = False
@@ -126,8 +146,10 @@ class Puck(BaseSlider):
     def destroy(self):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
-        if not self.lane.level.pucks:
-            self.lane.level.you_won()
+
+    def collide(self):
+        self.destroy()
+        self.lane.level.total_patrons -= 1
 
     def send_back(self):
         pos = self.pos
@@ -143,9 +165,12 @@ class Puck(BaseSlider):
             self.velocity_x = self.smack_velocity_x
             self.forward_delay_timer = 0
 
+    def continue_moving(self):
+        self.pos = Vector(*self.velocity) + self.pos
+
     def move_along(self):
         if self.forward_delay_timer <= self.forward_delay_interval:
-            self.pos = Vector(*self.velocity) + self.pos
+            self.continue_moving()
         elif self.forward_delay_timer <= self.forward_delay_duration:
             pass
         else:
