@@ -38,7 +38,7 @@ requirements = kivy
 presplash.filename = %(source.dir)s/img/splash.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/img/icon.png
+icon.filename = %(source.dir)s/img/ic_launcher.png
 
 # (str) Supported orientation (one of landscape, portrait or all)
 orientation = landscape
