@@ -28,7 +28,7 @@ class BaseSlider(Image):
 
 
 class EmptyBeer(BaseSlider):
-    velocity_x = NumericProperty(6.5)
+    velocity_x = NumericProperty(3.5)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
@@ -49,7 +49,7 @@ class EmptyBeer(BaseSlider):
 
 
 class BeerPuck(BaseSlider):
-    velocity_x = NumericProperty(-10)
+    velocity_x = NumericProperty(-6)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
@@ -84,10 +84,10 @@ class Puck(BaseSlider):
     smack_back_duration = NumericProperty(30)
     smack_timer = NumericProperty(0)
     is_served = BooleanProperty(False)
-    smack_velocity_x = NumericProperty(-9.5)
+    smack_velocity_x = NumericProperty(-7.5)
 
     # Normal State
-    forward_velocity_x = NumericProperty(8.5)
+    forward_velocity_x = NumericProperty(3)
 
     # Patrons move forward and then pause
     forward_delay_duration = NumericProperty(125)
