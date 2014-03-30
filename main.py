@@ -34,4 +34,4 @@ class Tppr(App):
 if __name__ == '__main__':
     Tppr().run()
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
