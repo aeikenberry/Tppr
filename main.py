@@ -28,7 +28,8 @@ class Tppr(App):
         sm = TpprMngr(app=self)
         sm.add_widget(MainMenu(name='Main Menu'))
         for i, level in enumerate(LEVELS, start=1):
-            level['name'] = "Level {}".format(i)
+            if not 'name' in level:
+                level['name'] = "Level {}".format(i)
             sm.add_widget(Level(**level))
         return sm
 
