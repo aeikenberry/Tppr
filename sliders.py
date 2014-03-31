@@ -60,8 +60,11 @@ class EmptyBeer(BaseSlider):
         self.fade_out()
 
     def destroy(self, *args):
-        self.lane.level.empty_beers.remove(self)
-        self.lane.puck_area.remove_widget(self)
+        try:
+            self.lane.level.empty_beers.remove(self)
+            self.lane.puck_area.remove_widget(self)
+        except ValueError:
+            pass
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
