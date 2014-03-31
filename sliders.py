@@ -1,4 +1,6 @@
+from kivy.animation import Animation
 from kivy.uix.image import Image
+from kivy.clock import Clock
 from kivy.vector import Vector
 from kivy.properties import (
     BooleanProperty,
@@ -14,6 +16,7 @@ class BaseSlider(Image):
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
     lane = ObjectProperty()
+    _move = BooleanProperty(True)
 
     def __init__(self, pos=None, lane=None):
         super(BaseSlider, self).__init__()
@@ -36,7 +39,6 @@ class EmptyBeer(BaseSlider):
     def move(self):
         if self.collide_widget(self.lane.serve_button):
             self.destroy()
-            print('losing life')
             self.lane.level.manager._app.lives -= 1
             return
 
@@ -60,9 +62,8 @@ class BeerPuck(BaseSlider):
         window_cords = self.to_window(*self.pos)
 
         if window_cords[0] <= 0:
-            self.destroy()
-            self.lane.level.manager._app.lives -= 1
-            return
+            return self.hit_wall()
+
         pucks_in_lane = [p for p in self.lane.level.pucks if p.lane == self.lane]
         for puck in pucks_in_lane:
             if puck.collide_widget(self):
@@ -75,15 +76,33 @@ class BeerPuck(BaseSlider):
         self.pos = Vector(*self.velocity) + self.pos
 
     def collide_handler(self):
-        self.lane.puck_area.remove_widget(self)
+        self._move = False
+        self.fade_out(d=.2)
+
+    def make_red(self):
+        self.source = 'img/red.png'
+        self.reload()
+
+    def hit_wall(self):
+        self._move = False
+        self.lane.level.manager._app.lives -= 1
+        self.start_remove()
+
+    def start_remove(self):
+        self.make_red()
+        Clock.schedule_once(self.fade_out, .5)
+
+    def fade_out(self, d=1, *args):
+        anim = Animation(opacity=0, duration=d)
+        anim.start(self)
+        Clock.schedule_once(self.destroy, .5)
+
+    def destroy(self, *args):
         try:
             self.lane.level.beers.remove(self)
+            self.lane.puck_area.remove_widget(self)
         except ValueError:
             pass
-
-    def destroy(self):
-        self.lane.level.beers.remove(self)
-        self.lane.puck_area.remove_widget(self)
 
 
 class Puck(BaseSlider):

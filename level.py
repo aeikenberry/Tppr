@@ -62,7 +62,8 @@ class Level(Screen):
 
         for group in self.movers:
             for obj in group:
-                obj.move()
+                if obj._move:
+                    obj.move()
 
         if self.counter % self.puck_addition_rate == 1 and self.total_patrons > 0:
             self.add_puck()
