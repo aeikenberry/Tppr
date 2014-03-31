@@ -30,21 +30,36 @@ class BaseSlider(Image):
     def start(self):
         self.velocity = self.velocity
 
+    def fade_out(self, d=1, *args):
+        anim = Animation(opacity=0, duration=d)
+        anim.start(self)
+        Clock.schedule_once(self.destroy, .5)
+
 
 class EmptyBeer(BaseSlider):
     velocity_x = NumericProperty(3.5)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
+    def __init__(self, *args, **kwargs):
+        super(EmptyBeer, self).__init__(*args, **kwargs)
+        anim = Animation(opacity=.7) + Animation(opacity=1)
+        anim.repeat = True
+        anim.start(self)
+
     def move(self):
         if self.collide_widget(self.lane.serve_button):
-            self.destroy()
+            self.collide_handler()
             self.lane.level.manager._app.lives -= 1
             return
 
         self.pos = Vector(*self.velocity) + self.pos
 
-    def destroy(self):
+    def collide_handler(self):
+        self._move = False
+        self.fade_out()
+
+    def destroy(self, *args):
         self.lane.level.empty_beers.remove(self)
         self.lane.puck_area.remove_widget(self)
 
@@ -91,11 +106,6 @@ class BeerPuck(BaseSlider):
     def start_remove(self):
         self.make_red()
         Clock.schedule_once(self.fade_out, .5)
-
-    def fade_out(self, d=1, *args):
-        anim = Animation(opacity=0, duration=d)
-        anim.start(self)
-        Clock.schedule_once(self.destroy, .5)
 
     def destroy(self, *args):
         try:
