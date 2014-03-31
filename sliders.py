@@ -54,7 +54,7 @@ class EmptyBeer(BaseSlider):
 
 
 class BeerPuck(BaseSlider):
-    velocity_x = NumericProperty(-6)
+    velocity_x = NumericProperty(-7.5)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
 
