@@ -82,8 +82,7 @@ class BeerPuck(BaseSlider):
         if window_cords[0] <= 0:
             return self.hit_wall()
 
-        pucks_in_lane = [p for p in self.lane.level.pucks if p.lane == self.lane]
-        for puck in pucks_in_lane:
+        for puck in self.lane.pucks:
             if puck.collide_widget(self):
                 if not puck.is_served:
                     self.collide_handler()
@@ -114,6 +113,7 @@ class BeerPuck(BaseSlider):
         try:
             self.lane.level.beers.remove(self)
             self.lane.puck_area.remove_widget(self)
+            self.lane.pucks.remove(self)
         except ValueError:
             pass
 

@@ -14,7 +14,7 @@ from sliders import Puck, BeerPuck
 
 
 class Lane(GridLayout):
-    pass
+    pucks = ListProperty(())
 
 
 class Level(Screen):
@@ -81,6 +81,7 @@ class Level(Screen):
         puck.pos = puck.pos[0], puck.pos[1] + 15
         lane.puck_area.add_widget(puck)
         self.pucks.append(puck)
+        lane.pucks.append(puck)
 
     def game_over(self):
         Clock.unschedule(self.update)
@@ -107,6 +108,7 @@ class Level(Screen):
         self.empty_beers = list()
         for num, lane in self.lanes.items():
             lane.puck_area.clear_widgets()
+            lane.pucks = list()
         self.message_holder.remove_widget(self.you_lose_label)
         self.message_holder.remove_widget(self.you_win_label)
         self.total_patrons = self._total_patrons
