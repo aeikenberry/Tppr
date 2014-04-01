@@ -53,11 +53,9 @@ class EmptyBeer(BaseSlider):
         anim.start(self)
 
     def move(self):
-        print('empty: {}, button: {}'.format(self.pos, self.lane.serve_button.pos))
-        if self.collide_widget(self.lane.serve_button):
+        if self.pos[0] >= self.lane.serve_button.pos[0] - self.lane.serve_button.width:
             self.collide_handler()
             self.lane.level.manager._app.lives -= 1
-            return
 
         self.pos = Vector(*self.velocity) + self.pos
 
