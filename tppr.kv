@@ -98,7 +98,7 @@
             size_hint: 1, .925
             Lane:
                 id: _lane_one
-                serve_button: _button_one
+                serve_button: _button
                 puck_area: _puck_area_one
                 level: _level
                 rows: 1
@@ -114,13 +114,13 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button_one
+                        id: _button
                         lane: _lane_one
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
                 id: _lane_two
-                serve_button: _button_two
+                serve_button: _button
                 puck_area: _puck_area_two
                 level: _level
                 rows: 1
@@ -136,13 +136,13 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button_two
+                        id: _button
                         lane: _lane_two
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
                 id: _lane_three
-                serve_button: _button_three
+                serve_button: _button
                 puck_area: _puck_area_three
                 level: _level
                 rows: 1
@@ -158,14 +158,14 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button_three
+                        id: _button
                         lane: _lane_three
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
                 id: _lane_four
                 puck_area: _puck_area_four
-                serve_button: _button_four
+                serve_button: _button
                 level: _level
                 rows: 1
                 cols: 2
@@ -180,7 +180,7 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button_four
+                        id: _button
                         lane: _lane_four
                         size_hint_y: .5
                         on_release: root.serve_handler(self)

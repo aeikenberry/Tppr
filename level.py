@@ -110,7 +110,7 @@ class Level(Screen):
 
     def no_events(self):
         for lane in self.lanes.values():
-            lane.serve_button.disabled = True
+            lane.disabled = True
             for empty in lane.beers:
                 empty.touchable = False
 
@@ -121,7 +121,7 @@ class Level(Screen):
         for lane in self.lanes.values():
             lane.puck_area.clear_widgets()
             lane.pucks = list()
-            lane.serve_button.disabled = False
+            lane.disabled = False
             lane.beers = list()
 
         self.message_holder.remove_widget(self.you_lose_label)
