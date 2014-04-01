@@ -72,11 +72,13 @@
         GridLayout:
             id: _status_bar
             rows: 1
-            cols: 3
+            cols: 4
             size_hint: 1, .075
             Label:
                 text: 'Tappr'
                 bold: True
+            Label:
+                text: root.name
             Label:
                 text: 'Score   ' + str(app.score)
                 color: 1,0,1,1
