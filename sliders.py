@@ -113,7 +113,7 @@ class BeerPuck(BaseSlider):
         try:
             self.lane.level.beers.remove(self)
             self.lane.puck_area.remove_widget(self)
-            self.lane.pucks.remove(self)
+            self.lane.beers.remove(self)
         except ValueError:
             pass
 
@@ -179,6 +179,7 @@ class Puck(BaseSlider):
     def destroy(self):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
+        self.lane.pucks.remove(self)
 
     def collide(self):
         self.destroy()
@@ -191,6 +192,7 @@ class Puck(BaseSlider):
         empty.pos = pos
         lane.puck_area.add_widget(empty)
         self.lane.level.empty_beers.append(empty)
+        self.lane.beers.append(empty)
 
     def collide_handler(self):
         if not self.is_served:

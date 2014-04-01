@@ -15,6 +15,7 @@ from sliders import Puck, BeerPuck
 
 class Lane(GridLayout):
     pucks = ListProperty(())
+    beers = ListProperty(())
 
 
 class Level(Screen):
