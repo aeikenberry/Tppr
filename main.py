@@ -1,10 +1,11 @@
 from kivy.app import App
+from kivy.core.audio import SoundLoader
 from kivy.uix.screenmanager import ScreenManager, Screen, RiseInTransition
 from kivy.properties import NumericProperty
 from level import Level
 from levels import LEVELS
 
-__version__ = '0.1.99'
+__version__ = '0.2.0'
 
 
 class MainMenu(Screen):
@@ -17,6 +18,10 @@ class TpprMngr(ScreenManager):
         super(ScreenManager, self).__init__(*args, **kwargs)
         self._app = kwargs['app']
         self._load_screens()
+        sound = SoundLoader.load('audio/background1.ogg')
+        if sound:
+            sound.loop = True
+            sound.play()
 
     def load_levels(self):
         """

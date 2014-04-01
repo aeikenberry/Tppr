@@ -39,6 +39,9 @@ class BaseSlider(Image):
         self.source = 'img/red.png'
         self.reload()
 
+    def halt_movement(self):
+        self.velocity_x = 0
+
 
 class EmptyBeer(BaseSlider):
     velocity_x = NumericProperty(3.5)
@@ -184,7 +187,6 @@ class Puck(BaseSlider):
 
     def collide(self):
         self._move = False
-        self.make_red()
         self.fade_out(d=.3)
         self.lane.level.total_patrons -= 1
 
@@ -214,6 +216,3 @@ class Puck(BaseSlider):
         else:
             self.forward_delay_timer = 0
         self.forward_delay_timer += 1
-
-    def halt_movement(self):
-        self.velocity_x = 0
