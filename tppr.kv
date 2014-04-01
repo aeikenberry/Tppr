@@ -10,6 +10,8 @@
 <Button>:
     background_normal: 'img/square-yellow.png'
     background_down: 'img/square-pressed.png'
+    background_disabled_normal: 'img/square-yellow.png'
+    background_disabled_down: 'img/square-yellow.png'
 
 <BeerPuck>:
     source: 'img/white.png'
@@ -92,7 +94,7 @@
             size_hint: 1, .925
             Lane:
                 id: _lane_one
-                serve_button: _button
+                serve_button: _button_one
                 puck_area: _puck_area_one
                 level: _level
                 rows: 1
@@ -108,13 +110,13 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button
+                        id: _button_one
                         lane: _lane_one
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
                 id: _lane_two
-                serve_button: _button
+                serve_button: _button_two
                 puck_area: _puck_area_two
                 level: _level
                 rows: 1
@@ -130,13 +132,13 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button
+                        id: _button_two
                         lane: _lane_two
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
                 id: _lane_three
-                serve_button: _button
+                serve_button: _button_three
                 puck_area: _puck_area_three
                 level: _level
                 rows: 1
@@ -152,14 +154,14 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button
+                        id: _button_three
                         lane: _lane_three
                         size_hint_y: .5
                         on_release: root.serve_handler(self)
             Lane:
                 id: _lane_four
                 puck_area: _puck_area_four
-                serve_button: _button
+                serve_button: _button_four
                 level: _level
                 rows: 1
                 cols: 2
@@ -174,7 +176,7 @@
                     anchor_x: 'right'
                     size_hint_x: .25
                     Button:
-                        id: _button
+                        id: _button_four
                         lane: _lane_four
                         size_hint_y: .5
                         on_release: root.serve_handler(self)

@@ -16,6 +16,7 @@ from sliders import Puck, BeerPuck
 class Lane(GridLayout):
     pucks = ListProperty(())
     beers = ListProperty(())
+    serve_button = ObjectProperty()
 
 
 class Level(Screen):
@@ -85,7 +86,7 @@ class Level(Screen):
         lane.pucks.append(puck)
 
     def game_over(self):
-        Clock.unschedule(self.update)
+        self.end_of_level()
         self.message_holder.add_widget(self.you_lose_label)
         Clock.schedule_once(self.goto_menu, 5)
 
@@ -95,13 +96,23 @@ class Level(Screen):
         self.manager._app.reset()
 
     def you_won(self):
-        Clock.unschedule(self.update)
+        self.end_of_level()
         self.message_holder.add_widget(self.you_win_label)
         Clock.schedule_once(self.goto_next_level, 5)
 
     def goto_next_level(self, *args):
         self.manager.current = self.manager.next()
         self.reset()
+
+    def end_of_level(self):
+        Clock.unschedule(self.update)
+        self.no_events()
+
+    def no_events(self):
+        for lane in self.lanes.values():
+            lane.serve_button.disabled = True
+            for empty in lane.beers:
+                empty.touchable = False
 
     def reset(self):
         self.beers = list()

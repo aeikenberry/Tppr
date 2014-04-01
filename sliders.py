@@ -43,6 +43,7 @@ class EmptyBeer(BaseSlider):
 
     def __init__(self, *args, **kwargs):
         super(EmptyBeer, self).__init__(*args, **kwargs)
+        self.touchable = True
         anim = Animation(opacity=.7) + Animation(opacity=1)
         anim.repeat = True
         anim.start(self)
@@ -67,7 +68,7 @@ class EmptyBeer(BaseSlider):
             pass
 
     def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
+        if self.collide_point(*touch.pos) and self.touchable:
             self.destroy()
 
 
