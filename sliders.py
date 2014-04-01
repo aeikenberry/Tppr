@@ -35,6 +35,10 @@ class BaseSlider(Image):
         anim.start(self)
         Clock.schedule_once(self.destroy, .5)
 
+    def make_red(self):
+        self.source = 'img/red.png'
+        self.reload()
+
 
 class EmptyBeer(BaseSlider):
     velocity_x = NumericProperty(3.5)
@@ -49,6 +53,7 @@ class EmptyBeer(BaseSlider):
         anim.start(self)
 
     def move(self):
+        print('empty: {}, button: {}'.format(self.pos, self.lane.serve_button.pos))
         if self.collide_widget(self.lane.serve_button):
             self.collide_handler()
             self.lane.level.manager._app.lives -= 1
@@ -96,10 +101,6 @@ class BeerPuck(BaseSlider):
     def collide_handler(self):
         self._move = False
         self.fade_out(d=.2)
-
-    def make_red(self):
-        self.source = 'img/red.png'
-        self.reload()
 
     def hit_wall(self):
         self._move = False
@@ -152,7 +153,7 @@ class Puck(BaseSlider):
     def move(self):
         window_cords = self.to_window(*self.pos)
 
-        if self.collide_widget(self.lane.serve_button):
+        if self.pos[0] >= self.lane.serve_button.pos[0] - self.lane.serve_button.width:
             self.collide()
             self.lane.level.manager._app.lives -= 1
         elif window_cords[0] <= -5:
@@ -177,13 +178,15 @@ class Puck(BaseSlider):
     def start(self):
         self.velocity_x = self.forward_velocity_x
 
-    def destroy(self):
+    def destroy(self, *args):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
         self.lane.pucks.remove(self)
 
     def collide(self):
-        self.destroy()
+        self._move = False
+        self.make_red()
+        self.fade_out(d=.3)
         self.lane.level.total_patrons -= 1
 
     def send_back(self):

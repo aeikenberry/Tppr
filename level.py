@@ -118,9 +118,12 @@ class Level(Screen):
         self.beers = list()
         self.pucks = list()
         self.empty_beers = list()
-        for num, lane in self.lanes.items():
+        for lane in self.lanes.values():
             lane.puck_area.clear_widgets()
             lane.pucks = list()
+            lane.serve_button.disabled = False
+            lane.beers = list()
+
         self.message_holder.remove_widget(self.you_lose_label)
         self.message_holder.remove_widget(self.you_win_label)
         self.total_patrons = self._total_patrons
