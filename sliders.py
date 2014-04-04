@@ -70,6 +70,7 @@ class EmptyBeer(BaseSlider):
         try:
             self.lane.level.empty_beers.remove(self)
             self.lane.puck_area.remove_widget(self)
+            self = None
         except ValueError:
             pass
 
@@ -117,6 +118,7 @@ class BeerPuck(BaseSlider):
             self.lane.level.beers.remove(self)
             self.lane.puck_area.remove_widget(self)
             self.lane.beers.remove(self)
+            self = None
         except ValueError:
             pass
 
@@ -184,6 +186,7 @@ class Puck(BaseSlider):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
         self.lane.pucks.remove(self)
+        self = None
 
     def collide(self):
         self._move = False

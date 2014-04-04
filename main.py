@@ -5,7 +5,7 @@ from kivy.properties import NumericProperty
 from level import Level
 from levels import LEVELS
 
-__version__ = '0.2.0'
+__version__ = '0.2.01'
 
 
 class MainMenu(Screen):
