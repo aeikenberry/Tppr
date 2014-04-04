@@ -70,7 +70,7 @@ class EmptyBeer(BaseSlider):
         try:
             self.lane.level.empty_beers.remove(self)
             self.lane.puck_area.remove_widget(self)
-            self = None
+            del(self)
         except ValueError:
             pass
 
@@ -89,14 +89,6 @@ class BeerPuck(BaseSlider):
 
         if window_cords[0] <= 0:
             return self.hit_wall()
-
-        for puck in self.lane.pucks:
-            if puck.collide_widget(self):
-                if not puck.is_served:
-                    self.collide_handler()
-                puck.collide_handler()
-                self.lane.level.manager._app.score += 1
-                return
 
         self.pos = Vector(*self.velocity) + self.pos
 
@@ -118,7 +110,7 @@ class BeerPuck(BaseSlider):
             self.lane.level.beers.remove(self)
             self.lane.puck_area.remove_widget(self)
             self.lane.beers.remove(self)
-            self = None
+            del(self)
         except ValueError:
             pass
 
@@ -156,7 +148,6 @@ class Puck(BaseSlider):
     def move(self):
         window_cords = self.to_window(*self.pos)
 
-        #if self.pos[0] >= self.lane.serve_button.pos[0] - self.lane.serve_button.width:
         if self.collide_widget(self.lane.serve_button):
             self.collide()
             self.lane.level.manager._app.lives -= 1
@@ -186,7 +177,7 @@ class Puck(BaseSlider):
         self.lane.level.pucks.remove(self)
         self.lane.puck_area.remove_widget(self)
         self.lane.pucks.remove(self)
-        self = None
+        del(self)
 
     def collide(self):
         self._move = False
@@ -200,7 +191,6 @@ class Puck(BaseSlider):
         empty.pos = pos
         lane.puck_area.add_widget(empty)
         self.lane.level.empty_beers.append(empty)
-        self.lane.beers.append(empty)
 
     def collide_handler(self):
         if not self.is_served:

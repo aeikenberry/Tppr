@@ -67,6 +67,16 @@ class Level(Screen):
                 if obj._move:
                     obj.move()
 
+        for lane in self.lanes.values():
+            try:
+                beer = lane.beers[0]
+                puck = lane.pucks[0]
+                if beer.collide_widget(puck):
+                    beer.collide_handler()
+                    puck.collide_handler()
+            except IndexError:
+                pass
+
         if self.counter % self.puck_addition_rate == 1 and self.total_patrons > 0:
             self.add_puck()
 
@@ -137,4 +147,5 @@ class Level(Screen):
         beer = BeerPuck(lane=button.lane)
         self.beers.append(beer)
         button.lane.puck_area.add_widget(beer)
+        button.lane.beers.append(beer)
         beer.pos = beer.to_local(button_pos[0], 15)
