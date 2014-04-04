@@ -69,6 +69,9 @@ class Level(Screen):
 
         for lane in self.lanes.values():
             try:
+                # TODO: This only half-works...
+                # If the front one gets knocked back behind the second,
+                # The first one needs to stop being the first one, etc.
                 beer = lane.beers[0]
                 puck = lane.pucks[0]
                 if beer.collide_widget(puck):
