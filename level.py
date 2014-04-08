@@ -68,10 +68,9 @@ class Level(Screen):
                     obj.move()
 
         for lane in self.lanes.values():
+            lane.beers = sorted(lane.beers, key=lambda x: x.pos[0])
+            lane.pucks = sorted(lane.pucks, key=lambda x: x.pos[0], reverse=True)
             try:
-                # TODO: This only half-works...
-                # If the front one gets knocked back behind the second,
-                # The first one needs to stop being the first one, etc.
                 beer = lane.beers[0]
                 puck = lane.pucks[0]
                 if beer.collide_widget(puck):

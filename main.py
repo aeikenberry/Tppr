@@ -1,6 +1,4 @@
-import gc
 from kivy.app import App
-from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 from kivy.uix.screenmanager import ScreenManager, Screen, RiseInTransition
 from kivy.properties import NumericProperty
@@ -20,14 +18,10 @@ class TpprMngr(ScreenManager):
         super(ScreenManager, self).__init__(*args, **kwargs)
         self._app = kwargs['app']
         self._load_screens()
-        Clock.schedule_interval(self.collect_garbage, 30)
         sound = SoundLoader.load('audio/background1.ogg')
         if sound:
             sound.loop = True
             sound.play()
-
-    def collect_garbage(self, *args):
-        gc.collect()
 
     def load_levels(self):
         """
