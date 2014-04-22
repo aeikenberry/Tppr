@@ -1,3 +1,4 @@
+import psutil
 from random import choice
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -40,7 +41,6 @@ class Level(Screen):
             3: self.lane_three,
             4: self.lane_four,
         }
-
         self.you_lose_label = Label(text='You Lost.')
         self.you_win_label = Label(text='Level Complete!')
         self.total_patrons = kwargs['patrons']
@@ -56,6 +56,7 @@ class Level(Screen):
         self.start()
 
     def update(self, dt):
+        # print psutil.virtual_memory()
         if self.manager._app.lives <= 0:
             return self.game_over()
 
@@ -127,8 +128,14 @@ class Level(Screen):
                 empty.touchable = False
 
     def reset(self):
+        for beer in self.beers:
+            beer.destroy()
         self.beers = list()
+        for puck in self.pucks:
+            puck.destroy()
         self.pucks = list()
+        for empty in self.empty_beers:
+            empty.destroy()
         self.empty_beers = list()
         for lane in self.lanes.values():
             lane.puck_area.clear_widgets()

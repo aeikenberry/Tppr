@@ -1,3 +1,4 @@
+import gc
 from kivy.animation import Animation
 from kivy.uix.image import Image
 from kivy.clock import Clock
@@ -73,6 +74,7 @@ class EmptyBeer(BaseSlider):
             del(self)
         except ValueError:
             pass
+        gc.collect()
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos) and self.touchable:
@@ -113,6 +115,7 @@ class BeerPuck(BaseSlider):
             del(self)
         except ValueError:
             pass
+        gc.collect()
 
 
 class Puck(BaseSlider):
@@ -178,6 +181,7 @@ class Puck(BaseSlider):
         self.lane.puck_area.remove_widget(self)
         self.lane.pucks.remove(self)
         del(self)
+        gc.collect()
 
     def collide(self):
         self._move = False
