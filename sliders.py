@@ -99,6 +99,7 @@ class BeerPuck(BaseSlider):
         self.fade_out(d=.2)
 
     def hit_wall(self):
+        print "hit wall"
         self._move = False
         self.lane.level.manager._app.lives -= 1
         self.start_remove()

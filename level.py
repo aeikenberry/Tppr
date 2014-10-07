@@ -1,4 +1,3 @@
-import psutil
 from random import choice
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -56,7 +55,6 @@ class Level(Screen):
         self.start()
 
     def update(self, dt):
-        # print psutil.virtual_memory()
         if self.manager._app.lives <= 0:
             return self.game_over()
 
@@ -74,7 +72,7 @@ class Level(Screen):
             try:
                 beer = lane.beers[0]
                 puck = lane.pucks[0]
-                if beer.collide_widget(puck):
+                if beer.collide_widget(puck) and puck._move:
                     beer.collide_handler()
                     puck.collide_handler()
             except IndexError:
@@ -86,7 +84,7 @@ class Level(Screen):
         self.counter += 1
 
     def start(self):
-        Clock.schedule_interval(self.update, 1.0 / 60.0)
+        Clock.schedule_interval(self.update, 1.0 / 55.0)
         for i in range(self.starting_patrons - 1):
             self.add_puck()
 
