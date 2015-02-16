@@ -11,3 +11,4 @@
 4. The winning logic is wrong. There shouldn't be get 10 out the door,
     it's get all the starting ones out the door at the same time. There shouldn't be new ones made
     constantly, which should also help with performance.
+  - don't remove the puck if it gets knocked all the way back, just wait to see if it gets re-added
