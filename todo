@@ -7,3 +7,7 @@
 
 3. In Tapper, there is a fixed number of patrons per row. Say there are 4 starting ones, there can never be more than 4 on that lane.
   - In the current implementation, it always starts with 1 and just increments endlessly based on a level attribute.
+
+4. The winning logic is wrong. There shouldn't be get 10 out the door,
+    it's get all the starting ones out the door at the same time. There shouldn't be new ones made
+    constantly, which should also help with performance.
