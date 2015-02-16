@@ -42,9 +42,7 @@ class Level(Screen):
         }
         self.you_lose_label = Label(text='You Lost.')
         self.you_win_label = Label(text='Level Complete!')
-        self.total_patrons = kwargs['patrons']
-        self._total_patrons = kwargs['patrons']
-        self.starting_patrons = kwargs['starting']
+        self.patrons = kwargs['starting']
 
         self.puck_speed = kwargs['puck_speed']
         self.empty_speed = kwargs['empty_speed']
@@ -85,8 +83,6 @@ class Level(Screen):
 
     def start(self):
         Clock.schedule_interval(self.update, 1.0 / 55.0)
-        for i in range(self.starting_patrons - 1):
-            self.add_puck()
 
     def add_puck(self):
         lane = self.lanes[choice([1, 2, 3, 4])]
@@ -146,7 +142,15 @@ class Level(Screen):
         self.total_patrons = self._total_patrons
 
     def setup(self):
-        pass
+        # create the starting pucks
+        for i, starting in enumerate(self.patrons):
+          lane = self.lanes[i+1]
+          for p in range(starting):
+            puck = Puck(lane=lane)
+            puck.pos = puck.pos[0], puck.pos[1] + 15
+            lane.puck_area.add_widget(puck)
+            self.pucks.append(puck)
+            lane.pucks.append(puck)
 
     def serve_handler(self, button):
         button_pos = list(button.to_window(*button.pos))
