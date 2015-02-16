@@ -1,0 +1,9 @@
+1. Loading all the levels on startup is probably not a good idea.
+  - Load next level only if they successfully cleared previous level.
+  - Keep track of current level so we can clear all levels and then load a specific one if needed.
+
+2. In Tapper, when you serve someone a beer, they are pushed back, and then there is a drinking period where they do not move forward and beers go past them.
+  - In the current implementation, they start moving right away.
+
+3. In Tapper, there is a fixed number of patrons per row. Say there are 4 starting ones, there can never be more than 4 on that lane.
+  - In the current implementation, it always starts with 1 and just increments endlessly based on a level attribute.
