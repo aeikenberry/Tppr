@@ -28,7 +28,7 @@ class TpprMngr(ScreenManager):
         Parses the level specs from levels.py
         """
         for i, level in enumerate(LEVELS, start=1):
-            if not 'name' in level:
+            if 'name' not in level:
                 level['name'] = "Level {}".format(i)
             self.add_widget(Level(**level))
 
@@ -50,6 +50,18 @@ class TpprMngr(ScreenManager):
         Returns the Screen that will be the Main Menu
         """
         return MainMenu(name='Main Menu')
+
+    def reset(self):
+        self._app.reset()
+
+    def get_lives_count(self):
+        return self._app.lives
+
+    def lost_life(self):
+        self._app.lives -= 1
+
+    def add_to_score(self, score):
+        self._app.score += score
 
 
 class Tppr(App):
