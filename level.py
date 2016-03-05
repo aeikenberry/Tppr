@@ -43,10 +43,12 @@ class Level(Screen):
         self.you_lose_label = Label(text='You Lost.')
         self.you_win_label = Label(text='Level Complete!')
         self.patrons = kwargs['starting']
+        self.total_patrons = len(self.patrons)
+        self._total_patrons = len(self.patrons)
 
         self.puck_speed = kwargs['puck_speed']
         self.empty_speed = kwargs['empty_speed']
-        self.puck_addition_rate = kwargs['spawn_rate']
+        self.puck_addition_rate = kwargs['respawn_rate']
 
     def on_pre_enter(self):
         self.setup()
