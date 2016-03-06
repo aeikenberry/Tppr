@@ -1,5 +1,6 @@
 import gc
 
+from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.vector import Vector
 from kivy.properties import (
@@ -47,3 +48,32 @@ class Beer(BaseSlider):
         except ValueError:
             pass
         gc.collect()
+
+
+class EmptyBeer(Beer):
+    empty = True
+    velocity_x = NumericProperty(3.5)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
+
+    def __init__(self, *args, **kwargs):
+        super(EmptyBeer, self).__init__(*args, **kwargs)
+        self.touchable = True
+        anim = Animation(opacity=.7) + Animation(opacity=1)
+        anim.repeat = True
+        anim.start(self)
+
+    def move(self):
+        if self.pos[0] >= self.lane.serve_button.pos[0] - self.lane.serve_button.width:
+            self.collide_handler()
+            self.lane.level.manager.lost_life()
+
+        self.pos = Vector(*self.velocity) + self.pos
+
+    def collide_handler(self):
+        self._move = False
+        self.fade_out()
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos) and self.touchable:
+            self.destroy()

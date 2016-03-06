@@ -8,7 +8,8 @@ from kivy.properties import (
     StringProperty,
 )
 
-from sliders import BaseSlider, EmptyBeer
+from beer import EmptyBeer
+from sliders import BaseSlider
 
 
 class Patron(BaseSlider):
@@ -85,6 +86,7 @@ class Patron(BaseSlider):
         empty = EmptyBeer(lane=lane)
         empty.pos = pos
         lane.puck_area.add_widget(empty)
+        lane.beers.append(empty)
 
     def collide_handler(self):
         if not self.is_served:

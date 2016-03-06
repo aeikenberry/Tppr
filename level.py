@@ -67,12 +67,12 @@ class Level(Screen):
                     if mover._move:
                         mover.move()
 
-            lane.beers = sorted(lane.beers, key=lambda x: x.pos[0])
-            lane.patrons = sorted(lane.patrons, key=lambda x: x.pos[0], reverse=True)
+            beers = sorted([beer for beer in lane.beers if not beer.empty], key=lambda x: x.pos[0])
+            patrons = sorted(lane.patrons, key=lambda x: x.pos[0], reverse=True)
 
             try:
-                beer = lane.beers[0]
-                patron = lane.patrons[0]
+                beer = beers[0]
+                patron = patrons[0]
                 if beer.collide_widget(patron) and patron._move:
                     beer.collide_handler()
                     patron.collide_handler()
