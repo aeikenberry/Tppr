@@ -21,6 +21,18 @@ class Lane(GridLayout):
     beers = ListProperty(())
     movers = ReferenceListProperty(patrons, beers)
     serve_button = ObjectProperty()
+    counter = NumericProperty(3)
+    total_patrons = NumericProperty(0)
+
+    def add_patron(self):
+        if len(self.patrons) >= self.total_patrons:
+            self.counter = 0
+            return
+
+        patron = Patron(lane=self)
+        patron.pos = patron.pos[0], patron.pos[1] + 15
+        self.puck_area.add_widget(patron)
+        self.patrons.append(patron)
 
 
 class Level(Screen):
@@ -45,6 +57,9 @@ class Level(Screen):
         self.you_win_label = Label(text='Level Complete!')
         self.starting_patrons = kwargs['starting']
         self.lane_patrons = kwargs['lane_members']
+
+        for i, count in enumerate(self.lane_patrons, start=1):
+            self.lanes[i].total_patrons = count
 
         self.patron_speed = kwargs['patron_speed']
         self.empty_speed = kwargs['empty_speed']
@@ -79,20 +94,13 @@ class Level(Screen):
             except IndexError:
                 pass
 
-        if self.counter % self.patron_addition_rate == 1:
-            self.add_patron()
+            if lane.counter % self.patron_addition_rate == 1:
+                lane.add_patron()
 
-        self.counter += 1
+            lane.counter += 1
 
     def start(self):
         Clock.schedule_interval(self.update, 1.0 / 55.0)
-
-    def add_patron(self):
-        lane = self.lanes[choice([1, 2, 3, 4])]
-        patron = Patron(lane=lane)
-        patron.pos = patron.pos[0], patron.pos[1] + 15
-        lane.puck_area.add_widget(patron)
-        lane.patrons.append(patron)
 
     def game_over(self):
         self.end_of_level()
@@ -134,7 +142,10 @@ class Level(Screen):
         self.message_holder.remove_widget(self.you_win_label)
 
     def setup(self):
-        # create the starting pucks
+        """
+        Adds the starting patrons to the lanes.
+        :return:
+        """
         for i, starting in enumerate(self.starting_patrons, start=1):
             lane = self.lanes[i]
             for p in range(starting):
