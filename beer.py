@@ -31,7 +31,6 @@ class Beer(BaseSlider):
         self.fade_out(d=.2)
 
     def hit_wall(self):
-        print "hit wall"
         self._move = False
         self.lane.level.manager.lost_life()
         self.start_remove()
