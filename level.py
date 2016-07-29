@@ -100,7 +100,7 @@ class Level(Screen):
             try:
                 beer = beers[0]
                 patron = patrons[0]
-                if beer.collide_widget(patron) and patron._move:
+                if beer.collide_widget(patron) and patron.can_collide:
                     beer.collide_handler()
                     patron.collide_handler()
             except IndexError:
