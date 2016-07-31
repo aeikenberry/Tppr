@@ -182,6 +182,7 @@ class Patron(BaseSlider):
             self.velocity_x = self.smack_velocity_x
             self.state = self.MovementState.BACKWARDS
             self.forward_delay_timer = 0
+            self.lane.level.manager.add_to_score(1)
 
     def continue_moving(self):
         self.pos = Vector(*self.velocity) + self.pos

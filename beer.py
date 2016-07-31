@@ -71,3 +71,4 @@ class EmptyBeer(Beer):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos) and self.touchable:
             self.destroy()
+            self.lane.level.manager.add_to_score(5)
