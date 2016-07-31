@@ -18,10 +18,16 @@ class TpprMngr(ScreenManager):
         super(ScreenManager, self).__init__(*args, **kwargs)
         self._app = kwargs['app']
         self._load_screens()
+        self.background_music = self.start_background_music()
+
+    def start_background_music(self):
         sound = SoundLoader.load('audio/background1.ogg')
+
         if sound:
             sound.loop = True
             sound.play()
+
+        return sound
 
     def load_levels(self):
         """

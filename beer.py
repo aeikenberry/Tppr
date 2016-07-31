@@ -13,10 +13,7 @@ from sliders import BaseSlider
 
 class Beer(BaseSlider):
     empty = False
-
     velocity_x = NumericProperty(-7.5)
-    velocity_y = NumericProperty(0)
-    velocity = ReferenceListProperty(velocity_x, velocity_y)
 
     def move(self):
         window_cords = self.to_window(*self.pos)
@@ -52,8 +49,6 @@ class Beer(BaseSlider):
 class EmptyBeer(Beer):
     empty = True
     velocity_x = NumericProperty(3.5)
-    velocity_y = NumericProperty(0)
-    velocity = ReferenceListProperty(velocity_x, velocity_y)
 
     def __init__(self, *args, **kwargs):
         super(EmptyBeer, self).__init__(*args, **kwargs)

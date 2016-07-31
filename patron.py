@@ -20,7 +20,7 @@ class Patron(BaseSlider):
     smack_timer = NumericProperty(0)
 
     # how long they should chill before moving again
-    stop_duration = NumericProperty(60)
+    stop_duration = NumericProperty(75)
     stop_timer = NumericProperty(0)
 
     # Normal State
@@ -32,6 +32,13 @@ class Patron(BaseSlider):
     forward_delay_timer = NumericProperty(0)
 
     state = StringProperty()
+
+    def __init__(self, *args, **kwargs):
+        lane_speed = kwargs.pop('lane_speed')
+        pause_duration = kwargs.pop('pause_duration')
+        self.forward_velocity_x = lane_speed
+        self.forward_delay_duration = pause_duration
+        super(Patron, self).__init__(*args, **kwargs)
 
     class MovementState(object):
         """
@@ -127,7 +134,6 @@ class Patron(BaseSlider):
     def reset_forward_motion(self):
         self.is_served = False
         self.forward()
-        self.send_back()
 
     # Movement Handlers
 
@@ -145,6 +151,7 @@ class Patron(BaseSlider):
     def drink(self):
         self.velocity_x = 0
         self.state = self.MovementState.DRINKING
+        self.send_back()
 
     def backwards(self):
         self.velocity_x = self.smack_velocity_x

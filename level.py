@@ -32,7 +32,12 @@ class Lane(GridLayout):
             self.counter = 0
             return
 
-        patron = Patron(lane=self)
+        patron = Patron(
+            lane=self,
+            lane_speed=self.level.patron_speed,
+            pause_duration=self.level.patron_pause,
+        )
+
         patron.pos = patron.pos[0], patron.pos[1] + 15
         self.puck_area.add_widget(patron)
         self.patrons.append(patron)
@@ -64,6 +69,7 @@ class Level(Screen):
             self.lanes[i].starting_patrons = kwargs['starting'][i - 1]
 
         self.patron_speed = kwargs['patron_speed']
+        self.patron_pause = kwargs['patron_pause']
         self.empty_speed = kwargs['empty_speed']
         self.patron_addition_rate = kwargs['respawn_rate']
 
@@ -186,7 +192,12 @@ class Level(Screen):
         """
         for lane in self.lanes.values():
             for p in range(lane.starting_patrons):
-                patron = Patron(lane=lane)
+                patron = Patron(
+                    lane=lane,
+                    lane_speed=self.patron_speed,
+                    pause_duration=self.patron_pause,
+                )
+
                 patron.pos = patron.pos[0], patron.pos[1] + 15
                 lane.puck_area.add_widget(patron)
                 lane.patrons.append(patron)
